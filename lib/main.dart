@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      // providing Products() to all child widgets of MaterialApp, so now all child widgets can set 
+      // providing Products() to all child widgets of MaterialApp, so now all child widgets can set
       // up a listener that will trigger a rebuild only for listeners
       builder: (context) => Products(),
       child: MaterialApp(
