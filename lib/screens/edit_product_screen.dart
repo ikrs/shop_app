@@ -47,6 +47,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
     //using global key to save form
     _form.currentState.save();
     print(_editedProduct.title);
@@ -82,6 +86,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please provide a value!';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                     title: value,
@@ -102,6 +112,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter a price';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  if (double.parse(value) <= 0) {
+                    return 'Please entere a number greater then 0.';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                     title: _editedProduct.title,
@@ -120,6 +142,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  if (value.length < 10) {
+                    return 'Should be at least 10 charactes long';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                     title: _editedProduct.title,
@@ -164,6 +195,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) {
                         _saveForm();
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter an image URL.';
+                        }
+                        if (!value.startsWith('http') &&
+                            !value.startsWith('https')) {
+                          return 'Please enter a valid URL';
+                        }
+                        if (!value.endsWith('.png') &&
+                            !value.endsWith('.jpg') &&
+                            !value.endsWith('.jpeg')) {
+                              return 'Please enter a valid image URL';
+                            }
+                        return null;
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
