@@ -10,10 +10,14 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    // with .value is the right approach if we use provider on something thats part of a list or a grid
+    // so that now we can make sure Provider works even if we change data in the widget and with builder 
+    // function it will not work correctly
+    return ChangeNotifierProvider.value(
       // providing Products() to all child widgets of MaterialApp, so now all child widgets can set
       // up a listener that will trigger a rebuild only for listeners
-      builder: (context) => Products(),
+      value: Products(),
+      // builder: (context) => Products(),
       child: MaterialApp(
         title: 'My Shop',
         theme: ThemeData(

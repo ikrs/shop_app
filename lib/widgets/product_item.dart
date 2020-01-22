@@ -17,7 +17,13 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    // we dont want to update whole tree, just get the product
+    final product = Provider.of<Product>(context, listen: false);
+
+    // Consumer is in general same as Provider.of with minor differences
+    // When we use Provide.of then the whole build method will rerun when that data
+    // changes, but you can also have a case that you want to run subpart of tree when data changes
+    // and then we use Consumer
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -35,14 +41,17 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(
-              product.isFavorite ? Icons.favorite : Icons.favorite_border,
+          // only update this part of the tree
+          leading: Consumer<Product>(
+            builder: (context, product, _) => IconButton(
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              ),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+              },
+              color: Theme.of(context).accentColor,
             ),
-            onPressed: () {
-              product.toggleFavoriteStatus();
-            },
-            color: Theme.of(context).accentColor,
           ),
           title: Text(
             product.title,
