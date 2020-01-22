@@ -81,4 +81,14 @@ class Products with ChangeNotifier {
   Product findById(String id) {
     return _items.firstWhere((product) => product.id == id);
   }
+
+  void updateProduct(String id, Product newProduct) {
+    final productIndex = _items.indexWhere((product) => product.id == id);
+    if (productIndex >= 0) {
+    _items[productIndex] = newProduct;
+    notifyListeners();
+    } else {
+      print('...');
+    }
+  }
 }
