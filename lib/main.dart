@@ -4,7 +4,7 @@ import 'package:provider/provider.dart'; // required for provider
 import './screens/products_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products.dart';
-import './providers/cart.dart'
+import './providers/cart.dart';
 
 void main() => runApp(MyApp());
 

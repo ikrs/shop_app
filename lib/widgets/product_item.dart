@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
+import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
   /* final String id;
@@ -19,6 +20,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // we dont want to update whole tree, just get the product
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
 
     // Consumer is in general same as Provider.of with minor differences
     // When we use Provide.of then the whole build method will rerun when that data
@@ -61,7 +63,9 @@ class ProductItem extends StatelessWidget {
             icon: Icon(
               Icons.shopping_cart,
             ),
-            onPressed: () {/* TODO */},
+            onPressed: () {
+              cart.addItem(product.id, product.price, product.title);
+            },
             color: Theme.of(context).accentColor,
           ),
         ),
