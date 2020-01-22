@@ -4,7 +4,7 @@ import './product.dart';
 
 // ChangeNotifier is a Mixin
 class Products with ChangeNotifier {
- List<Product> _items = [
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -41,18 +41,18 @@ class Products with ChangeNotifier {
 
   var _showFavoritesOnly = false;
 
- List<Product> get items {
-   /* if (_showFavoritesOnly) {
+  List<Product> get items {
+    /* if (_showFavoritesOnly) {
      // its a new list automatically so we dont need to do manual copying as below
      return _items.where((prodItem) => prodItem.isFavorite).toList();
    } */
-   // return copy of items
-   return [..._items];
- }
+    // return copy of items
+    return [..._items];
+  }
 
- List<Product> get favoriteItems {
-   return _items.where((prodItem) => prodItem.isFavorite).toList();
- }
+  List<Product> get favoriteItems {
+    return _items.where((prodItem) => prodItem.isFavorite).toList();
+  }
 
 /*  void showFavoritesOnly() {
    _showFavoritesOnly = true;
@@ -64,12 +64,21 @@ class Products with ChangeNotifier {
    notifyListeners();
  } */
 
- void addProduct() {
-  //  _items.add(value);
-   notifyListeners();
- }
+  void addProduct(Product product) {
+    final newProduct = Product(
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      id: DateTime.now().toString(),
+    );
+    _items.add(newProduct);
+    // we can also insert product at the beginging of the list
+    // _items.insert(0, newProduct);
+    notifyListeners();
+  }
 
- Product findById(String id) {
-   return _items.firstWhere((product) => product.id == id);
- }
+  Product findById(String id) {
+    return _items.firstWhere((product) => product.id == id);
+  }
 }
