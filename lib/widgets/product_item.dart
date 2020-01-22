@@ -6,16 +6,6 @@ import '../providers/product.dart';
 import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
-  /* final String id;
-  final String title;
-  final String imageUrl;
-
-  ProductItem(
-    this.id,
-    this.title,
-    this.imageUrl,
-  ); */
-
   @override
   Widget build(BuildContext context) {
     // we dont want to update whole tree, just get the product
@@ -65,6 +55,25 @@ class ProductItem extends StatelessWidget {
             ),
             onPressed: () {
               cart.addItem(product.id, product.price, product.title);
+              // hide snackbar if it already exists
+              Scaffold.of(context).hideCurrentSnackBar();
+              // get nearest Scaffold, in our case in product_overview_screen
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Added item to cart!',
+                  ),
+                  duration: Duration(
+                    seconds: 2,
+                  ),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.removeSingleItem(product.id);
+                    },
+                  ),
+                ),
+              );
             },
             color: Theme.of(context).accentColor,
           ),
