@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/product.dart';
+import './product.dart';
 
 // ChangeNotifier is a Mixin
 class Products with ChangeNotifier {
