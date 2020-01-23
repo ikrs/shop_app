@@ -1,4 +1,6 @@
+import 'dart:convert'; // gives us method to convert data
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; // http client
 
 import './product.dart';
 
@@ -65,6 +67,19 @@ class Products with ChangeNotifier {
  } */
 
   void addProduct(Product product) {
+    // adding http request
+    const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
+    http.post(
+      url,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isFavorite,
+      }),
+    );
+
     final newProduct = Product(
       title: product.title,
       description: product.description,
@@ -85,8 +100,8 @@ class Products with ChangeNotifier {
   void updateProduct(String id, Product newProduct) {
     final productIndex = _items.indexWhere((product) => product.id == id);
     if (productIndex >= 0) {
-    _items[productIndex] = newProduct;
-    notifyListeners();
+      _items[productIndex] = newProduct;
+      notifyListeners();
     } else {
       print('...');
     }
