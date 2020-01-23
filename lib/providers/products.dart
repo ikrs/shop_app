@@ -56,15 +56,16 @@ class Products with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-/*  void showFavoritesOnly() {
-   _showFavoritesOnly = true;
-   notifyListeners();
- }
-
- void showAll() {
-   _showFavoritesOnly = false;
-   notifyListeners();
- } */
+  Future<void> fetchAndSetProducts() async {
+    const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      print(json.decode(response.body));
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
 
   //returning a future
   // with async all code in method gets wrapped in future

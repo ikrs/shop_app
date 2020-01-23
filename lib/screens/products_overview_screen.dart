@@ -6,6 +6,7 @@ import '../widgets/badge.dart';
 import '../providers/cart.dart';
 import '../screens/cart_screens.dart';
 import '../widgets/app_drawer.dart';
+import '../providers/products.dart';
 
 enum FilterOptions {
   Favorites,
@@ -20,6 +21,30 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   // only this widget will controle showFavorite state and not Provider
   var _showOnlyFavorites = false;
+  var _isInit = true;
+
+  @override
+  void initState() {
+    // cant do this here becouse we dont have access to context
+    //Provider.of<Products>(context).fetchAndSetProducts();
+
+    // this will work but its a kind of a hack
+    /* Future.delayed(Duration.zero).then((_) {
+      Provider.of<Products>(context).fetchAndSetProducts();
+    }); */
+    super.initState();
+  }
+
+  // this runs after widget has been fully initilized
+  @override
+  void didChangeDependencies() {
+    if (_isInit){
+      Provider.of<Products>(context).fetchAndSetProducts();
+      _isInit = false;
+    }
+    
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
