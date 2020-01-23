@@ -66,27 +66,32 @@ class Products with ChangeNotifier {
    notifyListeners();
  } */
 
-//returning a future
-  Future<void> addProduct(Product product) {
+  //returning a future
+  // with async all code in method gets wrapped in future
+  Future<void> addProduct(Product product) async {
     // adding http request
     const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
-    return http
-        .post(
-      url,
-      body: json.encode({
-        'title': product.title,
-        'description': product.description,
-        'imageUrl': product.imageUrl,
-        'price': product.price,
-        'isFavorite': product.isFavorite,
-      }),
-    ).then((response) {
+
+    try {
+      // await = wait for this operation to finnish before moving to next line
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavorite,
+        }),
+      );
+
+      // this will execute once http request is done becouse of await
       final newProduct = Product(
         title: product.title,
         description: product.description,
         price: product.price,
         imageUrl: product.imageUrl,
-        id: json.decode(response.body)['name'], // adding firebase generated id 
+        id: json.decode(response.body)['name'], // adding firebase generated id
       );
 
       _items.add(newProduct);
@@ -94,10 +99,10 @@ class Products with ChangeNotifier {
       // we can also insert product at the beginging of the list
       // _items.insert(0, newProduct);
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print(error);
       throw error;
-    });
+    }
   }
 
   Product findById(String id) {
