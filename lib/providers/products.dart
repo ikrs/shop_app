@@ -7,7 +7,7 @@ import './product.dart';
 // ChangeNotifier is a Mixin
 class Products with ChangeNotifier {
   List<Product> _items = [
-    Product(
+    /* Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -38,7 +38,7 @@ class Products with ChangeNotifier {
       price: 49.99,
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+    ), */
   ];
 
   var _showFavoritesOnly = false;
@@ -60,7 +60,22 @@ class Products with ChangeNotifier {
     const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
     try {
       final response = await http.get(url);
-      print(json.decode(response.body));
+      final List<Product> loadedProducts = [];
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      extractedData.forEach((productId, productData) {
+        loadedProducts.add(Product(
+          id: productId,
+          title: productData['title'],
+          description: productData['description'],
+          price: productData['price'],
+          imageUrl: productData['imageUrl'],
+          isFavorite: productData['isFavorite'],
+        ));
+      });
+
+      _items = loadedProducts;
+      notifyListeners();
     } catch (error) {
       print(error);
       throw error;

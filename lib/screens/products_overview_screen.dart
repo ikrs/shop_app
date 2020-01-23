@@ -22,6 +22,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   // only this widget will controle showFavorite state and not Provider
   var _showOnlyFavorites = false;
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -38,11 +39,18 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   // this runs after widget has been fully initilized
   @override
   void didChangeDependencies() {
-    if (_isInit){
-      Provider.of<Products>(context).fetchAndSetProducts();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
       _isInit = false;
     }
-    
+
     super.didChangeDependencies();
   }
 
@@ -78,26 +86,29 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             ],
           ),
           Consumer<Cart>(
-            builder: (_, cart, ch) => Badge(
-              child: ch,
-              value: cart.itemCount.toString(),
-            ),
-            // this gets passed to builder as ch argument and we do this 
-            // when we dont want to rebuild specific child
-            child: IconButton(
+              builder: (_, cart, ch) => Badge(
+                    child: ch,
+                    value: cart.itemCount.toString(),
+                  ),
+              // this gets passed to builder as ch argument and we do this
+              // when we dont want to rebuild specific child
+              child: IconButton(
                 icon: Icon(
                   Icons.shopping_cart,
                 ),
                 onPressed: () {
                   Navigator.of(context).pushNamed(CartScreen.routeName);
                 },
-            )
-          ),
+              )),
         ],
       ),
       drawer: AppDrawer(),
       // like listView, .builder renders only items that are on the screen
-      body: ProductsGrid(_showOnlyFavorites),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_showOnlyFavorites),
     );
   }
 }
