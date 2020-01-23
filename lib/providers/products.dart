@@ -66,10 +66,11 @@ class Products with ChangeNotifier {
    notifyListeners();
  } */
 
-  void addProduct(Product product) {
+//returning a future
+  Future<void> addProduct(Product product) {
     // adding http request
     const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
-    http
+    return http
         .post(
       url,
       body: json.encode({
@@ -93,6 +94,9 @@ class Products with ChangeNotifier {
       // we can also insert product at the beginging of the list
       // _items.insert(0, newProduct);
       notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
     });
   }
 
