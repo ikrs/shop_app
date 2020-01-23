@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // http client
 
 import './product.dart';
+import '../models/http_exception.dart';
 
 // ChangeNotifier is a Mixin
 class Products with ChangeNotifier {
@@ -145,8 +146,28 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url =
+        'https://flutter-shop-app-6fa69.firebaseio.com/products/$id.json';
+    final existingProductIndex =
+        _items.indexWhere((product) => product.id == id);
+    var existingProduct = _items[existingProductIndex];
+
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+
+    // Optimistic updateing pattern
+    // in case there was error while deleting item we restore it back in _items list
+    // problem is that delete DOES NOT trow error so we need to write that logic
+    //  ourselfs and throw exception
+    final response = await http.delete(url).then((response) {
+      if (response.statusCode >= 400) {
+        _items.insert(existingProductIndex, existingProduct);
+        notifyListeners();
+
+        throw HttpException('Could not delete product');
+      }
+      existingProduct = null;
+    });
   }
 }
