@@ -31,7 +31,6 @@ class UserProductsScreen extends StatelessWidget {
       ),
       drawer: AppDrawer(),
       body: RefreshIndicator(
-        // RefreshIndicator not working
         onRefresh: () => _refreshProducts(context),
         child: Padding(
           padding: EdgeInsets.all(8),

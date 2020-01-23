@@ -80,7 +80,7 @@ class CartItem extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(5),
                 child: FittedBox(
-                  child: Text('\$${price}'),
+                  child: Text('\$$price'),
                 ),
               ),
             ),
@@ -88,7 +88,7 @@ class CartItem extends StatelessWidget {
             subtitle: Text(
               'Total: \$${price * quantity}',
             ),
-            trailing: Text('${quantity} x'),
+            trailing: Text('$quantity x'),
           ),
         ),
       ),
