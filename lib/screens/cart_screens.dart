@@ -65,7 +65,7 @@ class CartScreen extends StatelessWidget {
   }
 }
 
-// moved it so we dont have to change state on the whole tree in CartScreen
+// moved it so we dont have to change state on the whole tree in CartScreen but insted just this part
 class OrderButton extends StatefulWidget {
   const OrderButton({
     Key key,
