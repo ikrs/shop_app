@@ -69,7 +69,8 @@ class Products with ChangeNotifier {
   void addProduct(Product product) {
     // adding http request
     const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
-    http.post(
+    http
+        .post(
       url,
       body: json.encode({
         'title': product.title,
@@ -78,19 +79,21 @@ class Products with ChangeNotifier {
         'price': product.price,
         'isFavorite': product.isFavorite,
       }),
-    );
+    ).then((response) {
+      final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)['name'], // adding firebase generated id 
+      );
 
-    final newProduct = Product(
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
-    // we can also insert product at the beginging of the list
-    // _items.insert(0, newProduct);
-    notifyListeners();
+      _items.add(newProduct);
+
+      // we can also insert product at the beginging of the list
+      // _items.insert(0, newProduct);
+      notifyListeners();
+    });
   }
 
   Product findById(String id) {
