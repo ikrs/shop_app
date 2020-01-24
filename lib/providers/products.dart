@@ -41,14 +41,18 @@ class Products with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ), */
   ];
+  // var _showFavoritesOnly = false;
+  final String authToken;
 
-  var _showFavoritesOnly = false;
+  // adding items so that we dont lose them on Products rebuild while updating authToken
+  Products(this.authToken, this._items);
 
   List<Product> get items {
     /* if (_showFavoritesOnly) {
      // its a new list automatically so we dont need to do manual copying as below
      return _items.where((prodItem) => prodItem.isFavorite).toList();
    } */
+   
     // return copy of items
     return [..._items];
   }
@@ -58,7 +62,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
+    final url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json?auth=$authToken';
+    print(url);
     try {
       final response = await http.get(url);
       final List<Product> loadedProducts = [];
