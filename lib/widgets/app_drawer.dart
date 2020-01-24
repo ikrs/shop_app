@@ -47,6 +47,9 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               //close Drawer first or we will get silent errors
               Navigator.of(context).pop();
+
+              // making sure we alwaise end up on homepage 
+              Navigator.of(context).pushReplacementNamed('/');
               Provider.of<Auth>(context, listen: false).logout();
             },
           ),
