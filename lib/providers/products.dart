@@ -52,7 +52,7 @@ class Products with ChangeNotifier {
      // its a new list automatically so we dont need to do manual copying as below
      return _items.where((prodItem) => prodItem.isFavorite).toList();
    } */
-   
+
     // return copy of items
     return [..._items];
   }
@@ -96,7 +96,7 @@ class Products with ChangeNotifier {
   // with async all code in method gets wrapped in future
   Future<void> addProduct(Product product) async {
     // adding http request
-    const url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json';
+    final url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json?auth=$authToken';
 
     try {
       // await = wait for this operation to finnish before moving to next line
@@ -139,7 +139,7 @@ class Products with ChangeNotifier {
     final productIndex = _items.indexWhere((product) => product.id == id);
     if (productIndex >= 0) {
       final url =
-          'https://flutter-shop-app-6fa69.firebaseio.com/products/$id.json';
+          'https://flutter-shop-app-6fa69.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -157,7 +157,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url =
-        'https://flutter-shop-app-6fa69.firebaseio.com/products/$id.json';
+        'https://flutter-shop-app-6fa69.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex =
         _items.indexWhere((product) => product.id == id);
     var existingProduct = _items[existingProductIndex];
