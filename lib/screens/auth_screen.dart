@@ -1,6 +1,8 @@
 import 'dart:math';
+import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -43,10 +45,10 @@ class AuthScreen extends StatelessWidget {
                           EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
                       // transform how container is presented
                       transform: Matrix4.rotationZ(-8 * pi / 180)
-                      // 'translate' returns void but 'transform' required object
-                      // so '..' means that we dont want to return what 'translate' returns
-                      //  but what previous method returns, in our case 'rotationZ'
-                      // .. = cascade operator
+                        // 'translate' returns void but 'transform' required object
+                        // so '..' means that we dont want to return what 'translate' returns
+                        //  but what previous method returns, in our case 'rotationZ'
+                        // .. = cascade operator
                         ..translate(-10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -103,7 +105,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -114,8 +116,16 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       // Log user in
+      await Provider.of<Auth>(context, listen: false).login(
+        _authData['email'],
+        _authData['password'],
+      );
     } else {
       // Sign user up
+      await Provider.of<Auth>(context, listen: false).signup(
+        _authData['email'],
+        _authData['password'],
+      );
     }
     setState(() {
       _isLoading = false;
