@@ -40,21 +40,25 @@ class MyApp extends StatelessWidget {
           value: Auth(),
         ),
       ],
-      child: MaterialApp(
-        title: 'My Shop',
-        theme: ThemeData(
-          primaryColor: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
+      // adding consumer around MaterialApp to know what homescreen to show
+      // based on if user is logged in or not
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => MaterialApp(
+          title: 'My Shop',
+          theme: ThemeData(
+            primaryColor: Colors.purple,
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Lato',
+          ),
+          home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+          routes: {
+            ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+            CartScreen.routeName: (context) => CartScreen(),
+            OrdersScreen.routeName: (context) => OrdersScreen(),
+            UserProductsScreen.routeName: (context) => UserProductsScreen(),
+            EditProductScreen.routeName: (context) => EditProductScreen(),
+          },
         ),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
-          CartScreen.routeName: (context) => CartScreen(),
-          OrdersScreen.routeName: (context) => OrdersScreen(),
-          UserProductsScreen.routeName: (context) => UserProductsScreen(),
-          EditProductScreen.routeName: (context) => EditProductScreen(),
-        },
       ),
     );
   }
