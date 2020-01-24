@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
           // object so that we dont loose them
           builder: (context, auth, previousProducts) => Products(
             auth.token,
+            auth.userId,
             previousProducts == null ? [] : previousProducts.items,
           ),
         ),

@@ -43,9 +43,10 @@ class Products with ChangeNotifier {
   ];
   // var _showFavoritesOnly = false;
   final String authToken;
+  final String userId;
 
   // adding items so that we dont lose them on Products rebuild while updating authToken
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
   List<Product> get items {
     /* if (_showFavoritesOnly) {
@@ -62,7 +63,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    final url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json?auth=$authToken';
+    final url =
+        'https://flutter-shop-app-6fa69.firebaseio.com/products.json?auth=$authToken';
     print(url);
     try {
       final response = await http.get(url);
@@ -73,6 +75,11 @@ class Products with ChangeNotifier {
         return;
       }
 
+      final favoritesUrl =
+          'https://flutter-shop-app-6fa69.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(favoritesUrl);
+      final favoriteData = json.decode(favoriteResponse.body);
+
       extractedData.forEach((productId, productData) {
         loadedProducts.add(Product(
           id: productId,
@@ -80,7 +87,8 @@ class Products with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[productId] ?? false,
         ));
       });
 
@@ -96,7 +104,8 @@ class Products with ChangeNotifier {
   // with async all code in method gets wrapped in future
   Future<void> addProduct(Product product) async {
     // adding http request
-    final url = 'https://flutter-shop-app-6fa69.firebaseio.com/products.json?auth=$authToken';
+    final url =
+        'https://flutter-shop-app-6fa69.firebaseio.com/products.json?auth=$authToken';
 
     try {
       // await = wait for this operation to finnish before moving to next line
@@ -107,7 +116,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
 
